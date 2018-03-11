@@ -9,8 +9,10 @@ STEP = 5
 stats = {}
 
 def add_random_edge(node_list, graph):
+    temp = list(node_list)
     rand_val1 = rand.choice(node_list)
-    rand_val2 = rand.choice(node_list)
+    temp.remove(rand_val1)
+    rand_val2 = rand.choice(temp)
     graph.add_edge(rand_val1, rand_val2)
 
 def generate_connected_graph(node_count):
@@ -29,7 +31,7 @@ if len(sys.argv) > 1:
     try:
         MAX_NODES = int(sys.argv[1])
     except:
-        print("invalid int, using " + MAX_NODES)
+        print("invalid int, using " + str(MAX_NODES))
 
 nodes = STEP
 while nodes <= MAX_NODES:
@@ -49,4 +51,5 @@ plt.xlabel('number of nodes')
 plt.ylabel('random edges generated (average of '
             +str(NUM_TESTS)
             +' tests)')
+
 plt.show()
