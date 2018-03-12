@@ -48,17 +48,12 @@ plt.xlabel('# of nodes')
 plt.ylabel('degree')
 
 stats = {}
-
 graph = generate_connected_graph(NODES)
 for (i, j) in graph.degree():
     try:
         stats[j] += 1
     except:
         stats[j] = 1
-values = []
-keys = []
-for i in stats.keys():
-    keys.append(i); values.append(stats[i])
-plt.plot(values, keys, 'ro')
 
+plt.plot(stats.values(), stats.keys(), 'ro')
 plt.show()
