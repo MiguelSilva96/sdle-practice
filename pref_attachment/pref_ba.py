@@ -1,7 +1,9 @@
 '''
-Generate edges on a graph using preferential
-attachment. The first node is selected randomly and
-the second is selected using preferential attachment.
+Similar to v1 but this time we start with one node
+and add a new node for each new edge
+until it reaches the required number.
+The edge links the new node to an existing node,
+this node is selected using preferential attachment
 '''
 
 import networkx as nx
@@ -16,23 +18,20 @@ list_to_randomize = []
 def add_preferential_edge(node_list, graph):
     global list_to_randomize
     rand_val1 = rand.choice(node_list)
-    rand_val2 = rand_val1
-    while rand_val2 == rand_val1:
-        rand_val2 = rand.choice(list_to_randomize)
-    if graph.has_edge(rand_val1, rand_val2) is False:
-        list_to_randomize.append(rand_val1)
-        list_to_randomize.append(rand_val2)
+    node_list.remove(rand_val1)
+    rand_val2 = rand.choice(list_to_randomize)
+    list_to_randomize.append(rand_val1)
+    list_to_randomize.append(rand_val2)
     graph.add_edge(rand_val1, rand_val2)
 
 def generate_connected_graph(node_count):
     global list_to_randomize
-    node_list = range(0, node_count)
-    list_to_randomize = list(node_list)
+    node_list = list(range(1, node_count))
+    list_to_randomize = [0]
     graph = nx.Graph()
-    graph.add_nodes_from(node_list)
     for i in range(1, node_count):
         add_preferential_edge(node_list, graph)
-    while nx.is_connected(graph) == False:
+    while len(node_list) > 0:
         add_preferential_edge(node_list, graph)
     return graph
 
@@ -60,7 +59,6 @@ for (i, j) in graph.degree():
         stats[j] += 1
     except:
         stats[j] = 1
-
 coords = []
 for i in stats:
     coords.append((i, stats[i]))
