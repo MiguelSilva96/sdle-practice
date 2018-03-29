@@ -45,12 +45,9 @@ if len(sys.argv) > 1:
 print("Number of nodes: "+str(NODES))
 print("default is 100, configurable by argument")
 
-### Configure plot
+### Configure figure
 fig = plt.figure()
 fig.canvas.set_window_title('Preferential attachment')
-plt.title('Generation of edges on a graph')
-plt.xlabel('# of nodes')
-plt.ylabel('degree')
 
 stats = {}
 graph = generate_connected_graph(NODES)
@@ -65,5 +62,12 @@ for i in stats:
 coords.sort(key = lambda x : x[0], reverse = False)
 
 keys, values = zip(*coords)
+plt.subplot(1, 2, 1)
 plt.plot(values, keys, 'ro-')
+plt.title('Generation of edges on a graph')
+plt.xlabel('# of nodes')
+plt.ylabel('degree')
+
+plt.subplot(1, 2, 2)
+nx.draw(graph)
 plt.show()
