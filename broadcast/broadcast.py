@@ -2,11 +2,9 @@ import sys
 import networkx as nx
 import random as rand
 import matplotlib.pyplot as plt
+import math
 
 '''
-    - Needed improvements:
-        only broadcast to a certain percentage of neighbors
-        support random graph, only supporting barabasi albert for now
     - Cool improvements:
         make step by step iteration triggered by the user
 '''
@@ -25,11 +23,15 @@ class NetworkSimulation:
         self.broadcasting = []
         self.received_msg = []
         self.current_step = 0
+        self.percentage = broadcast_percent
 
     def __node_broadcast(self, node):
         next_msg = node.next_to_broadcast()
+        how_many = 0
         if next_msg is not None:
-            for i in self.graph.neighbors(node.get_num()):
+            neighbors = list(self.graph.neighbors(node.get_num()))
+            num = math.ceil(len(neighbors) * self.percentage)
+            for i in rand.sample(neighbors, num):
                 neighbor = self.nodes[i]
                 res = neighbor.append(next_msg)
                 self.received_msg.append(neighbor)
@@ -89,16 +91,19 @@ class Node:
         return None
 
 ###########################################
+
 nodes = 100
+percentage = 1.0
+
 if len(sys.argv) > 1:
     try:
         nodes = int(sys.argv[1])
     except:
         print("invalid int, using " + str(nodes))
-print("Number of nodes: "+str(nodes))
+print("Number of nodes: " + str(nodes))
 print("default is 100, configurable by argument")
 
-simulation = NetworkSimulation(nodes, 1)
+simulation = NetworkSimulation(nodes, percentage)
 stats = simulation.run()
 
 # plot stats
